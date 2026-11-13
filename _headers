@@ -1,0 +1,38 @@
+# Cloudflare Pages headers
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(self), microphone=(), geolocation=()
+
+# Vite output: content-hashed file names -> cache forever
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# MediaPipe runtime + model (URLs carry ?v=<version> for cache busting)
+/mediapipe/*
+  Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
+
+/mediapipe/*.wasm
+  Content-Type: application/wasm
+
+/mediapipe/*.task
+  Content-Type: application/octet-stream
+
+# Watch models (not hashed): short cache (5 min), revalidate in the background
+/models/*
+  Cache-Control: public, max-age=300, stale-while-revalidate=3600
+
+/models/*.glb
+  Content-Type: model/gltf-binary
+
+/models/models.json
+  ! Cache-Control
+  Cache-Control: no-cache
+
+# the app shell is served at / (Pages never requests /index.html itself)
+/
+  Cache-Control: no-cache
+
+/index.html
+  Cache-Control: no-cache
